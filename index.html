@@ -19,7 +19,7 @@
       Search Wikipedia from not Wikipedia!
     </h2>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Search for Articles" aria-label="Search for Articles" aria-describedby="basic-addon2">
+      <input type="text" class="form-control" placeholder="Search for Articles" id="searchbar" aria-label="Search for Articles" aria-describedby="basic-addon2">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button" id="closeClick">X</button>
         <button class="btn btn-outline-secondary" type="button" id="searchClick">Search</button>
@@ -29,24 +29,48 @@
         Random Article
       </a>
   </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <h4 id="title1"></h4>
+        <p id="article1"></p>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Optional JavaScript -->
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
   <script>
     $("#searchClick").click(function() {
-        $("#search").animate({
-          paddingTop: "2%"
-        }, 500, function() {
-          // Animation complete.
+      $("#search").animate({
+        paddingTop: "2%"
+      }, 500, function() {
+        let search = document.getElementById("searchbar").value;
+        let wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search="
+        let searchURL = wikiURL + search;
+        console.log(searchURL);
+        $.ajax({
+          url: searchURL,
+          dataType: 'jsonp',
+          type: 'get',
+          cache: false,
+          success: function(data) {
+            console.log(data[1][0]);
+            document.getElementById("title1").innerHTML = data[1][0];
+            console.log(data[2][0]);
+            document.getElementById("article1").innerHTML = data[2][0]
+          }
         });
+      });
     });
+
     $("#closeClick").click(function() {
-        $("#search").animate({
-          paddingTop: "15%"
-        }, 500, function() {
-          // Animation complete.
-        });
+      $("#search").animate({
+        paddingTop: "15%"
+      }, 500, function() {
+        // Animation complete.
+      });
     });
   </script>
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
