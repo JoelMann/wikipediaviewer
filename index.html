@@ -19,7 +19,7 @@
       Search Wikipedia from not Wikipedia!
     </h2>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Search for Articles" id="searchbar" aria-label="Search for Articles" aria-describedby="basic-addon2">
+      <input type="text" class="form-control" placeholder="Search" id="searchbar" aria-label="Search" aria-describedby="basic-addon2">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button" id="closeClick">X</button>
         <button class="btn btn-outline-secondary" type="button" id="searchClick">Search</button>
@@ -29,40 +29,46 @@
         Random Article
       </a>
   </div>
+  <br>
   <div id="list" class="container">
   </div>
-
+  <br>
 
   <!-- Optional JavaScript -->
   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
   <script>
     $("#searchClick").click(function() {
-      $("#search").animate({
-        paddingTop: "2%"
-      }, 500, function() {
-        let search = document.getElementById("searchbar").value;
-        let wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search="
-        let searchURL = wikiURL + search;
-        console.log(searchURL);
-        $.ajax({
-          url: searchURL,
-          dataType: 'jsonp',
-          type: 'get',
-          cache: false,
-          success: function(data) {
-            for (var i = 0; i < data[1].length; i++){
-              $('#list').append("<div class='row'>", "<strong> ", data[1][i], "</strong>", "<p>", data[2][i], "</p>", "</div>");
+      let search = document.getElementById("searchbar").value
+      if (search) {
+        $("#search").animate({
+          paddingTop: "2%"
+        }, 500, function() {
+          let wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search="
+          let searchURL = wikiURL + search;
+          console.log(searchURL);
+          $.ajax({
+            url: searchURL,
+            dataType: 'jsonp',
+            type: 'get',
+            cache: false,
+            success: function(data) {
+              $("#startList").remove();
+              $("#list").append("<div id='startList' class='list-group'></div>")
+              for (var i = 0; i < data[1].length; i++) {
+                $('#startList').append("<a href='" + data[3][i] +"'" + "class='list-group-item list-group-item-action'>" + "<h4>" + data[1][i] + "</h4>" + data[2][i] + "</a>");
+              }
             }
-          }
+          });
         });
-      });
-    });
+      }
+    })
 
     $("#closeClick").click(function() {
       $("#search").animate({
-        paddingTop: "15%"
+        paddingTop: "20%"
       }, 500, function() {
-        // Animation complete.
+        document.getElementById("searchbar").value = "";
+        $("#startList").remove();
       });
     });
   </script>
