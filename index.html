@@ -29,13 +29,7 @@
         Random Article
       </a>
   </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <h4 id="title1"></h4>
-        <p id="article1"></p>
-      </div>
-    </div>
+  <div id="list" class="container">
   </div>
 
 
@@ -56,10 +50,9 @@
           type: 'get',
           cache: false,
           success: function(data) {
-            console.log(data[1][0]);
-            document.getElementById("title1").innerHTML = data[1][0];
-            console.log(data[2][0]);
-            document.getElementById("article1").innerHTML = data[2][0]
+            for (var i = 0; i < data[1].length; i++){
+              $('#list').append("<div class='row'>", "<strong> ", data[1][i], "</strong>", "<p>", data[2][i], "</p>", "</div>");
+            }
           }
         });
       });
